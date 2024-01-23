@@ -51,7 +51,11 @@ public class Board {
 	private User user; //DB는 오브젝트를 저장할 수 없다. FK, 자바는 오브젝트를 저장할 수 있다. 
 
 	//@JoinColumn(name="replyId")
-	//@OneToMany(mappedBy="board",fetch=FetchType.LAZY) //mappedBy 연관관계의 주인이 아니다 (난 FK가 아니에요) DB에 컬럼을 만들지마세요.  board = Reply의 멤버 변수 이름. 
+	
+	//UI 구현 상에 리플이 펼쳐보기 형태로 바로 필요하지 않을 때는 LAZY 전략
+	//@OneToMany(mappedBy="board",fetch=FetchType.LAZY) //mappedBy 연관관계의 주인이 아니다 (난 FK가 아니에요) DB에 컬럼을 만들지마세요.  board = Reply의 멤버 변수 이름.
+	
+	//UI 처음 화면 상에 리플 내용이 보여지는 UI 라면 EAGER 전략으로 처리 
 	@OneToMany(mappedBy="board",fetch=FetchType.EAGER) //mappedBy 연관관계의 주인이 아니다 (난 FK가 아니에요) DB에 컬럼을 만들지마세요.  board = Reply의 멤버 변수 이름.
 	private List<Reply> reply;
 	
