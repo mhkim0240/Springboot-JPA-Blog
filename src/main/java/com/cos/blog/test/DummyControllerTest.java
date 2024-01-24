@@ -35,7 +35,7 @@ public class DummyControllerTest {
 	//json 데이터를 요청 => Java Object(MessageConverter의 Jackson라이브러리가 변환해서 받아줘요)
 	//http://localhost:8080/blog/dummy/user/1
 	//email, password
-	@Transactional
+	@Transactional //함수 종료시에 자동 commit 이 됨. 
 	@PutMapping("/dummy/user/{id}")
 	public User updateUser(@PathVariable int id, @RequestBody User requestUser){
 		System.out.println("id : " + id);
