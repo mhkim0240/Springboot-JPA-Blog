@@ -7,10 +7,12 @@ import java.util.function.Supplier;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +30,19 @@ public class DummyControllerTest {
 	@Autowired // DI  의존성 주입. 
 	private UserRepository userRepository;
 	
+	@DeleteMapping("/dummy/user/{id}")
+	public String delete(@PathVariable int id) {
+		
+		try {
+			userRepository.deleteById(id);	
+		}catch(Exception e){ //귀찮으면 최상위 Exception으로 . 
+		//}catch(EmptyResultDataAccessException e){
+			return "삭제에 실패하였습니다. 해당 id는 DB에 없습니다.";
+		}
+		
+		return "삭제되었습니다. " + id;
+	}
+	
 	//save 함수는 id를 전달하지 않으면 insert를 해주고
 	//save 함수는 id를 전달하면 해당 id에 대한 데이터가 있으면 update를 해주고
 	//save 함수는 id를 전달하면 해당 id에 대한 데이터가 없으면 insert를 해요. 
@@ -42,9 +57,12 @@ public class DummyControllerTest {
 		System.out.println("password : " + requestUser.getPassword());
 		System.out.println("email : " + requestUser.getEmail());
 
+		//영속화 (영속성 컨택스트)
 		User user = userRepository.findById(id).orElseThrow(()->{
 			return new IllegalArgumentException("수정에 실패하였습니다.");
 		});
+		
+		//변경 감지. -> 더티체킹. 
 		user.setPassword(requestUser.getPassword());
 		user.setEmail(requestUser.getEmail());
 		
@@ -56,7 +74,8 @@ public class DummyControllerTest {
 		//save는 update하지 않는 값들을 null로 채워버려서 put/update 시에는 잘 사용하지 않는다. 
 		//userRepository.save(requestUser);
 		
-		return null;
+		//더티 체킹 
+		return user;
 	}
 	
 	
