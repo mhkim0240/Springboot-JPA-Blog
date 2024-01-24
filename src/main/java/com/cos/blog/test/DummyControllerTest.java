@@ -4,6 +4,8 @@ package com.cos.blog.test;
 import java.util.List;
 import java.util.function.Supplier;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,19 +14,51 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.UserRepository;
 
-
-
 @RestController
 public class DummyControllerTest {
 	
 	@Autowired // DI  의존성 주입. 
 	private UserRepository userRepository;
+	
+	//save 함수는 id를 전달하지 않으면 insert를 해주고
+	//save 함수는 id를 전달하면 해당 id에 대한 데이터가 있으면 update를 해주고
+	//save 함수는 id를 전달하면 해당 id에 대한 데이터가 없으면 insert를 해요. 
+	
+	//json 데이터를 요청 => Java Object(MessageConverter의 Jackson라이브러리가 변환해서 받아줘요)
+	//http://localhost:8080/blog/dummy/user/1
+	//email, password
+	@Transactional
+	@PutMapping("/dummy/user/{id}")
+	public User updateUser(@PathVariable int id, @RequestBody User requestUser){
+		System.out.println("id : " + id);
+		System.out.println("password : " + requestUser.getPassword());
+		System.out.println("email : " + requestUser.getEmail());
+
+		User user = userRepository.findById(id).orElseThrow(()->{
+			return new IllegalArgumentException("수정에 실패하였습니다.");
+		});
+		user.setPassword(requestUser.getPassword());
+		user.setEmail(requestUser.getEmail());
+		
+		//@Transactional 어노테이션을 붙이지 않으면 save 함수를 호출.
+		//@Transactional 어노테이션 없이 save 함수를 통해 업데이트 하는 방법.
+		//userRepository.save(user);
+		
+		//requestUser.setId(id);
+		//save는 update하지 않는 값들을 null로 채워버려서 put/update 시에는 잘 사용하지 않는다. 
+		//userRepository.save(requestUser);
+		
+		return null;
+	}
+	
 	
 	//http://localhost:8080/blog/dummy/users
 	@GetMapping("dummy/users")
