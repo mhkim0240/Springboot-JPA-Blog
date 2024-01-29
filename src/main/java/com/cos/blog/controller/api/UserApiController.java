@@ -19,7 +19,8 @@ public class UserApiController {
 	@Autowired // DI  의존성 주입. 
 	private UserService userService;
 	
-	@PostMapping("/api/user")
+	//@PostMapping("/api/user")
+	@PostMapping("/auth/joinProc")
 	//public int save(@RequestBody User user) {
 	public ResponseDto<Integer> save(@RequestBody User user) {
 		
