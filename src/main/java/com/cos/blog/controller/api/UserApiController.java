@@ -19,11 +19,6 @@ public class UserApiController {
 	@Autowired // DI  의존성 주입. 
 	private UserService userService;
 	
-	//이렇게 선언해도 가능. 
-	//@Autowired 
-	//private HttpSession session;
-	
-	
 	@PostMapping("/api/user")
 	//public int save(@RequestBody User user) {
 	public ResponseDto<Integer> save(@RequestBody User user) {
@@ -35,19 +30,31 @@ public class UserApiController {
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1); //자바오브젝트를 JSON으로 변환해서 리턴(JACKSON)
 	}
 	
-	// 이방식은 전통적인 로그인 방식이고 다음시간에 스프링 시큐리티를 이용해서 로그인 해볼거다. 
-	@PostMapping("/api/user/login")
-	public ResponseDto<Integer> login(@RequestBody User user, HttpSession session){
-		System.out.println("UserApiController : login 호출됨");
-		User principal = userService.로그인(user); //principal (접근주체)
-		
-		if(principal != null) {
-			session.setAttribute("principal", principal);
-		}
-		
-		return new ResponseDto<Integer>(HttpStatus.OK.value(),1); //자바오브젝트를 JSON으로 변환해서 리턴(JACKSON)
-	}
 }
+
+
+
+
+// 이방식은 전통적인 로그인 방식이고 다음시간에 스프링 시큐리티를 이용해서 로그인 해볼거다.
+/*
+//이렇게 선언해도 가능. 
+//@Autowired 
+//private HttpSession session;
+
+@PostMapping("/api/user/login")
+public ResponseDto<Integer> login(@RequestBody User user, HttpSession session){
+	System.out.println("UserApiController : login 호출됨");
+	User principal = userService.로그인(user); //principal (접근주체)
+	
+	if(principal != null) {
+		session.setAttribute("principal", principal);
+	}
+	return new ResponseDto<Integer>(HttpStatus.OK.value(),1); //자바오브젝트를 JSON으로 변환해서 리턴(JACKSON)
+}
+*/
+
+
+
 
 /* Service 없이. 
 @RestController
