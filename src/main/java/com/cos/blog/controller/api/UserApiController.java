@@ -26,7 +26,7 @@ public class UserApiController {
 		
 		System.out.println("User ApiController : save 호출됨");
 		
-		user.setRole(RoleType.USER);
+		//user.setRole(RoleType.USER);
 		userService.회원가입(user);
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1); //자바오브젝트를 JSON으로 변환해서 리턴(JACKSON)
 	}
