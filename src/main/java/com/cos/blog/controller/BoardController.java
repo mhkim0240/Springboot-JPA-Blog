@@ -1,21 +1,25 @@
 package com.cos.blog.controller;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.cos.blog.config.auth.PrincipalDetail;
+import com.cos.blog.service.BoardService;
 
 @Controller
 public class BoardController {
 	
+	@Autowired
+	private BoardService boardService;
+	
 	@GetMapping({"","/"}) //아무것도 안붙였을 때와 /를 붙였을때 index 로 가게. 
-	//public String index(@AuthenticationPrincipal PrincipalDetail principal) { //컨트롤러에서 세션을 어떻게 찾는지 ??? 
-	public String index() { //컨트롤러에서 세션을 어떻게 찾는지 ???
-		//WEB-INF/views/index.jsp
+	public String index(Model model) {
 		
-		//System.out.println("로그인 사용자 아이디 : "+ principal.getUsername());
-		return "index";
+		model.addAttribute("boards", boardService.글목록());
+		//model은 jsp 에서 리퀘스트 정보이다. 
+
+		return "index"; //viewResolver 작동. 
 	}
 	
 	//USER 권한이 필요
