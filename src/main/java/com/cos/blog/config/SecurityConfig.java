@@ -1,10 +1,14 @@
 package com.cos.blog.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -13,6 +17,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig{ // 2. extends 제거
 
 	// 3. principalDetailService 제거
+	
+	@Autowired
+    private AuthenticationManager authenticationManager;
+
 
 	// 4. AuthenticationManager 메서드 생성
 	@Bean
@@ -48,6 +56,20 @@ public class SecurityConfig{ // 2. extends 제거
 
 		return http.build();
 	}
+	
+	 public void updatePassword(String pwd) {
+	        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+
+	        // 새로운 인증 토큰 생성
+	        UsernamePasswordAuthenticationToken newAuthenticationToken =
+	                new UsernamePasswordAuthenticationToken(currentAuthentication.getPrincipal(), pwd);
+
+	        // AuthenticationManager를 사용하여 인증을 갱신
+	        Authentication refreshedAuthentication = authenticationManager.authenticate(newAuthenticationToken);
+
+	        // SecurityContextHolder를 사용하여 현재 SecurityContext에 갱신된 인증 정보를 설정
+	        SecurityContextHolder.getContext().setAuthentication(refreshedAuthentication);
+	    }
 }
 
 /*
