@@ -13,6 +13,10 @@ let index = {
 			this.save();
 		});
 
+		$("#btn-update").on("click", () => {
+			this.update();
+		});
+
 		//Spring-Security 로 삭제
 		/*
 		$("#btn-login").on("click", () => {
@@ -53,6 +57,28 @@ let index = {
 			//dataType: text 로 하면 text 형식으로 받음. 
 		}).done(function(resp) {
 			alert("회원가입이 완료되었습니다." + resp);
+			location.href = "/";
+		}).fail(function(error) {
+			alert(JSON.stringify(error));
+
+		});
+	},
+	update: function() {
+
+		let data = {
+			id: $("#id").val(),
+			password: $("#password").val(),
+			email: $("#email").val()
+		};
+
+		$.ajax({
+			type: "PUT",
+			url: "/user",
+			data: JSON.stringify(data), //http body데이터
+			contentType: "application/json; charset=utf-8",
+			dataType: "json"
+		}).done(function(resp) {
+			alert("회원정보 수정이 완료되었습니다." + resp);
 			location.href = "/";
 		}).fail(function(error) {
 			alert(JSON.stringify(error));

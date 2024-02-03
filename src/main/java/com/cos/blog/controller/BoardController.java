@@ -13,32 +13,33 @@ import com.cos.blog.service.BoardService;
 
 @Controller
 public class BoardController {
-	
+
 	@Autowired
 	private BoardService boardService;
-	
-	@GetMapping({"","/"}) //아무것도 안붙였을 때와 /를 붙였을때 index 로 가게. 
-	public String index(Model model,@PageableDefault(size=3, sort="id", direction=Sort.Direction.DESC) Pageable pageable) {
-		
-		model.addAttribute("boards", boardService.글목록(pageable));
-		//model은 jsp 에서 리퀘스트 정보이다. 
 
-		return "index"; //viewResolver 작동. 
+	@GetMapping({ "", "/" }) // 아무것도 안붙였을 때와 /를 붙였을때 index 로 가게.
+	public String index(Model model,
+			@PageableDefault(size = 3, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+		model.addAttribute("boards", boardService.글목록(pageable));
+		// model은 jsp 에서 리퀘스트 정보이다.
+
+		return "index"; // viewResolver 작동.
 	}
-	
+
 	@GetMapping("/board/{id}")
 	public String findById(@PathVariable int id, Model model) {
-		model.addAttribute("board",boardService.글상세보기(id));
+		model.addAttribute("board", boardService.글상세보기(id));
 		return "board/detail";
 	}
-	
+
 	@GetMapping("/board/{id}/updateForm")
 	public String updateForm(@PathVariable int id, Model model) {
-		model.addAttribute("board",boardService.글상세보기(id));
+		model.addAttribute("board", boardService.글상세보기(id));
 		return "board/updateForm";
 	}
-	
-	//USER 권한이 필요
+
+	// USER 권한이 필요
 	@GetMapping("/board/saveForm")
 	public String saveForm() {
 		return "board/saveForm";

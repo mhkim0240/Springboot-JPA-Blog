@@ -7,6 +7,13 @@
   Login
 </sec:authorize>
  -->
+ 
+ <!-- 
+ 현재 세션으로 저장된 로그인한 객체가 principal (property) 이라는 이름으로 저장이 되있다.
+ 그객체를 principal(var) 이라는 변수에 넣는다.
+ principal(var) == PrincipalDetail.java 이다.    	
+ principal.user 라고 하면 user 객체에 접근할 수 있다	
+ -->
 <sec:authorize access="isAuthenticated()">
 	<sec:authentication property="principal" var="principal" />
 </sec:authorize>
