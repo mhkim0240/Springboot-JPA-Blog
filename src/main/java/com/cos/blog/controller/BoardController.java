@@ -1,9 +1,13 @@
 package com.cos.blog.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.cos.blog.service.BoardService;
 
@@ -14,12 +18,18 @@ public class BoardController {
 	private BoardService boardService;
 	
 	@GetMapping({"","/"}) //아무것도 안붙였을 때와 /를 붙였을때 index 로 가게. 
-	public String index(Model model) {
+	public String index(Model model,@PageableDefault(size=3, sort="id", direction=Sort.Direction.DESC) Pageable pageable) {
 		
-		model.addAttribute("boards", boardService.글목록());
+		model.addAttribute("boards", boardService.글목록(pageable));
 		//model은 jsp 에서 리퀘스트 정보이다. 
 
 		return "index"; //viewResolver 작동. 
+	}
+	
+	@GetMapping("/board/{id}")
+	public String findById(@PathVariable int id, Model model) {
+		model.addAttribute("board",boardService.글상세보기(id));
+		return "board/detail";
 	}
 	
 	//USER 권한이 필요

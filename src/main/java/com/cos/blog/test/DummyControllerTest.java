@@ -7,7 +7,6 @@ import java.util.function.Supplier;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,12 +19,17 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cos.blog.model.Board;
 import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
+import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.UserRepository;
 
 @RestController
 public class DummyControllerTest {
+
+	@Autowired // DI  의존성 주입. 
+	private BoardRepository boardRepository;
 	
 	@Autowired // DI  의존성 주입. 
 	private UserRepository userRepository;
@@ -88,7 +92,8 @@ public class DummyControllerTest {
 	//한페이지당 2건 조회. 
 	//http://localhost:8080/blog/dummy/user?page=0,1
 	@GetMapping ("/dummy/user")
-	public List<User> pageList(@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+	//public List<User> pageList(@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+	public Page pageList(@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable){  //pageable info print
 		
 		Page<User> pagingUser = userRepository.findAll(pageable);
 		
@@ -97,8 +102,26 @@ public class DummyControllerTest {
 		}
 		List<User> users = pagingUser.getContent();	
 	
-		return users;
+		//return users;
+		return pagingUser;
 	}
+	
+	
+	@GetMapping ("/dummy/board")
+	//public List<User> pageList(@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable){
+	public Page pageBoardList(@PageableDefault(size=2, sort="id", direction = Sort.Direction.DESC) Pageable pageable){  //pageable info print
+		
+		Page<Board> pagingBoard = boardRepository.findAll(pageable);
+		
+		if(pagingBoard.isLast()) {
+			
+		}
+		List<Board> users = pagingBoard.getContent();	
+	
+		//return users;
+		return pagingBoard;
+	}
+	
 	
 	//http://localhost:8080/blog/dummy/user/5
 	@GetMapping("/dummy/user/{id}")
