@@ -69,7 +69,7 @@ public class SecurityConfig{ // 2. extends 제거
 
 	        // SecurityContextHolder를 사용하여 현재 SecurityContext에 갱신된 인증 정보를 설정
 	        SecurityContextHolder.getContext().setAuthentication(refreshedAuthentication);
-	    }
+	}
 }
 
 /*
